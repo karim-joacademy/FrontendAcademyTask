@@ -4,11 +4,13 @@ import {registerFormFields} from "./registerFormFields.js";
 import validateForm from "src/utils/validateForm.js";
 import {registerFormSchema} from "./registerFormSchema.js";
 import {Link} from "react-router-dom";
-import {login, register} from "src/service/auth.js";
+import {register} from "src/service/auth.js";
 import {Form, FormWrapper, textFieldStyles} from "src/styles/authSharedStyledComponents.js";
-
+import useAuth from "src/hooks/useAuth.js";
 
 function RegisterForm() {
+    const {handleUserStatusChange} = useAuth();
+
     const [registerData, setRegisterData] = useState({
         name:"",
         email:"",
@@ -32,13 +34,15 @@ function RegisterForm() {
         const validationResult = await validateForm(registerData, registerFormSchema);
 
         if (validationResult.isValid) {
-            const result = await login(registerData);
+            const result = await register(registerData);
 
             if(result.isError) {
                 setErrorMessages((prevState) => ({
                     ...prevState,
                     backendErrorMessage: result.message,
                 }));
+            } else {
+                handleUserStatusChange();
             }
         } else {
             setErrorMessages(validationResult.errMessages);
@@ -68,7 +72,7 @@ function RegisterForm() {
                         {errorMessages.backendErrorMessage}
                     </Typography>
                 )}
-                <Link to={'/login'}>Already got an email?</Link>
+                <Link to={'/'}>Already got an email?</Link>
                 <Button type="submit" variant="contained" color="primary" sx={{ width:'100%', textTransform: 'none' }}> Register </Button>
             </Form>
         </FormWrapper>

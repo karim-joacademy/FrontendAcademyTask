@@ -1,15 +1,16 @@
-import {BrowserRouter, Route, Routes} from "react-router-dom";
-import Home from "../../../FrontendAcademyTask/src/components/Home";
-import Register from "../../../FrontendAcademyTask/src/pages/auth/Register";
-import Login from "../../../FrontendAcademyTask/src/pages/auth/Login";
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+import Home from "src/pages/Home";
+import Register from "src/pages/auth/Register";
+import Login from "src/pages/auth/Login/index.jsx";
+import useAuth from "src/hooks/useAuth.js";
 
 function AppRoutes() {
+    const { user } = useAuth();
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<Home/>} />
-                <Route path="/register" element={<Register/>} />
-                <Route path="/login" element={<Login/>} />
+                <Route path="/" element={user.isLoggedIn ? <Home/> : <Login/>} />
+                <Route path="/register" element={user.isLoggedIn ? <Navigate to={"/"}/> : <Register/> } />
             </Routes>
         </BrowserRouter>
     )

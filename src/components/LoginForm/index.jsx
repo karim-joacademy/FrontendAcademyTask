@@ -9,7 +9,7 @@ import {login} from "src/service/auth.js";
 import useAuth from "src/hooks/useAuth.js";
 
 function LoginForm() {
-    const {handleUserChange} = useAuth();
+    const {handleUserStatusChange} = useAuth();
 
     const [loginData, setLoginData] = useState({
         email:"",
@@ -40,7 +40,7 @@ function LoginForm() {
                     backendErrorMessage: result.message,
                 }));
             } else {
-                handleUserChange(result.name, result.email);
+                handleUserStatusChange();
             }
         } else {
             setErrorMessages(validationResult.errMessages);
